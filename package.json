@@ -1,0 +1,28 @@
+{
+  "name": "eventbrite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start:apps:api": "npm run build && node --env-file=.env dist/lib/apps/api/start.js",
+    "db:migrate": "NODE_OPTIONS='--import tsx' node --env-file=.env src/lib/database/migrate.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "drizzle-kit": "^0.20.14",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.6.0",
+    "drizzle-orm": "^0.30.6",
+    "fastify": "^4.26.2",
+    "tsx": "^4.7.1",
+    "undici": "^6.10.2"
+  }
+}
