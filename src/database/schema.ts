@@ -22,8 +22,8 @@ export const ordersAttendees = sqliteTable('order_attendees', {
     .notNull()
 });
 
-export type InsertUser = typeof orders.$inferInsert;
-export type SelectUser = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+export type SelectOrder = typeof orders.$inferSelect;
 
-export type InsertPost = typeof ordersAttendees.$inferInsert;
-export type SelectPost = typeof ordersAttendees.$inferSelect;
+export type InsertOrderAttendees = typeof ordersAttendees.$inferInsert;
+export type SelectOrdersAttendees = typeof ordersAttendees.$inferSelect;
