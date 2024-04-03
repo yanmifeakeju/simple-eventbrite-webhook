@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "63064369-1e7f-46c9-b8e8-f8c780edd20d",
+  "id": "b3fcd86b-383d-4501-a2a4-d33729182a17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "orders": {
@@ -16,6 +16,13 @@
         },
         "name": {
           "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "order_id": {
+          "name": "order_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -37,7 +44,15 @@
           "default": "CURRENT_TIMESTAMP"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "orders_order_id_unique": {
+          "name": "orders_order_id_unique",
+          "columns": [
+            "order_id"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -52,18 +67,11 @@
           "notNull": true,
           "autoincrement": false
         },
-        "ticket_id": {
-          "name": "ticket_id",
+        "attendee_id": {
+          "name": "attendee_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
-        },
-        "seat_number": {
-          "name": "seat_number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
         "order_id": {
@@ -82,7 +90,15 @@
           "default": "CURRENT_TIMESTAMP"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "order_attendees_attendee_id_unique": {
+          "name": "order_attendees_attendee_id_unique",
+          "columns": [
+            "attendee_id"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "order_attendees_order_id_orders_id_fk": {
           "name": "order_attendees_order_id_orders_id_fk",

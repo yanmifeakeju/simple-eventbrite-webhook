@@ -7,8 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start:apps:api": "npm run build && node --env-file=.env dist/apps/api/start.js",
-    "db:migrate": "NODE_OPTIONS='--import tsx' node --env-file=.env src/database/migrate.ts"
+    "start:api": "npm run build && node --env-file=.env dist/apps/api/start.js",
+    "start:consumer:orders": "npm run build && node --env-file=.env dist/apps/worker/process-order.js",
+    "db:migrate": "NODE_OPTIONS='--import tsx' node --env-file=.env src/database/migrate.ts",
+    "db:generate": "npx --env-file=.env drizzle-kit generate:sqlite"
   },
   "keywords": [],
   "author": "",

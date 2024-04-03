@@ -11,20 +11,19 @@ declare module 'fastify' {
   }
 }
 
+const { Clean, Check } = Value;
+
 export default async function rootRoute(
   fastify: FastifyInstance,
   opts: FastifyPluginOptions
 ) {
   fastify.post('/eventbrite', async (request, reply) => {
-    const payload = Value.Clean(
+    const payload = Clean(
       eventBriteSchema.EventBriteWebhookSchema,
       request.body
     );
 
-    const valid = Value.Check(
-      eventBriteSchema.EventBriteWebhookSchema,
-      payload
-    );
+    const valid = Check(eventBriteSchema.EventBriteWebhookSchema, payload);
 
     if (!valid) {
       reply.code(400);
