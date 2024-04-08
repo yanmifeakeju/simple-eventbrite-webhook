@@ -34,8 +34,8 @@ seatAllocator([
   }
 ]);
 
+const lock = lockFactory.createLock('seats', '5s');
 export async function assignSeats(seatNumber: number) {
-  const lock = lockFactory.createLock('seats', '5s');
   let acquired = await lock.acquire({ retry: { delay: 1000, attempts: 10 } });
 
   const availableSeats = seats.get(CODE);
