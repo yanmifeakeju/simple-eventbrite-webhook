@@ -84,6 +84,8 @@ const processOrders = async (payload: EventBritePayload) => {
       console.log(
         `Attendees count ${attendeesDetails.pagination.object_count}`
       );
+
+      // allocateSeats
     } catch (err) {
       console.log(err);
     }
