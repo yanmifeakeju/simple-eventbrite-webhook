@@ -8,6 +8,8 @@ import {
 } from '../schema/index.js';
 import { db } from '../../../database/index.js';
 import { orders, ordersAttendees } from '../../../database/schema.js';
+import { assignSeats } from './seat-allocator.js';
+import { sendMail } from '../../../integrations/resend/index.js';
 
 const { Clean, Check } = Value;
 
@@ -85,7 +87,23 @@ const processOrders = async (payload: EventBritePayload) => {
         `Attendees count ${attendeesDetails.pagination.object_count}`
       );
 
-      // allocateSeats
+      const seats = await assignSeats(attendeesDetails.pagination.object_count);
+
+      let message = 'No seat available';
+
+      if (seats.length) {
+        if (seats.length > 1) {
+          const lastIndex = seats.length - 1;
+
+          const assignText =
+            seats.slice(0, lastIndex).join(', ') + ', and ' + seats[lastIndex];
+          message = `You have been assigned seats: ${assignText}`;
+        } else {
+          message = `You have been assigned seats: ${seats.join(', ')}`;
+        }
+      }
+
+      await sendMail({ to: details.email, subject: 'Seats allocated', body: message });
     } catch (err) {
       console.log(err);
     }

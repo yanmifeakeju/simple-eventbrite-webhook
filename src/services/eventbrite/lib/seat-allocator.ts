@@ -1,5 +1,5 @@
-import {LockFactory} from '@verrou/core';
-import {memoryStore} from '@verrou/core/drivers/memory';
+import { LockFactory } from '@verrou/core';
+import { memoryStore } from '@verrou/core/drivers/memory';
 type SeatArrangementConfig = {
   code: string;
   numberOfSeats: number;
@@ -8,52 +8,45 @@ type SeatArrangementConfig = {
 
 const seats = new Map<string, string[]>();
 const store = memoryStore();
-const lockFactory = new LockFactory(store.factory())
+const lockFactory = new LockFactory(store.factory());
 
 export const seatAllocator = async (configs: SeatArrangementConfig[] = []) => {
-
   for (let config of configs) {
-  let currentSeats = [];
+    let currentSeats = [];
 
     for (let i = 0; i < config.numberOfSeats; i++) {
       let seatNumber = i.toString().padStart(3, '0');
-      currentSeats.push(`${config.code}${seatNumber}`)
+      currentSeats.push(`${config.code}${seatNumber}`);
     }
 
-    seats.set(config.code, currentSeats)
-    console.log(config.code, currentSeats.length)
+    seats.set(config.code, currentSeats);
+    console.log(config.code, currentSeats.length);
   }
-
-
 };
 
-seatAllocator([{
-code: 'A',
-skip: 50,
-numberOfSeats: 10000
-}]);
+const CODE = 'A';
 
-export async function assignSeat(seatNumber: number) {
-  const availableSeats = seats.get('A')
-  const lock = lockFactory.createLock('seats');
-  let acquired =await lock.acquire({retry: {timeout: '5s', delay: 1000, attempts: 3}})
+seatAllocator([
+  {
+    code: CODE,
+    skip: 50,
+    numberOfSeats: 10000
+  }
+]);
 
-  let result: number | undefined;
+export async function assignSeats(seatNumber: number) {
+  const lock = lockFactory.createLock('seats', '5s');
+  let acquired = await lock.acquire({ retry: { delay: 1000, attempts: 10 } });
 
-  let count = 0;
+  const availableSeats = seats.get(CODE);
 
-  while(count < 3 && !acquired) {
-    acquired = await lock.acquire({retry: {timeout: '5s', delay: 1000, attempts: 3}})
+  if (acquired) {
+    if (availableSeats?.length && availableSeats.length >= seatNumber) {
+      const getSeats = availableSeats.splice(0, seatNumber);
+      seats.set(CODE, availableSeats);
+      return getSeats;
+    }
+  }
 
-
-  console.log(acquired)
-
-  if(acquired)
-     result = availableSeats?.length;
-
-
-return result;
+  return [];
 }
-console.log(await Promise.all([assignSeat(5), assignSeat(5)]))
-// const s = await assignSeat(5);
-// console.log(s)
